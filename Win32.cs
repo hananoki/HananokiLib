@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 
 public static class Win32 {
@@ -72,11 +71,60 @@ public static class Win32 {
 	}
 
 
+
 	[DllImport( "kernel32" )]
 	public static extern bool AllocConsole();
 
 	[DllImport( "kernel32.dll", ExactSpelling = true )]
 	public static extern void GetSystemInfo( out SystemInfo ptmpsi );
+
+
+#if ENABLE_SHELL32_DLL
+	// SHGetFileInfo関数
+	[DllImport( "shell32.dll" )]
+	public static extern IntPtr SHGetFileInfo( string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags );
+	// SHGetFileInfo関数で使用するフラグ
+	public const uint SHGFI_ICON = 0x100; // アイコン・リソースの取得
+	public const uint SHGFI_LARGEICON = 0x0; // 大きいアイコン
+	public const uint SHGFI_SMALLICON = 0x1; // 小さいアイコン
+																					 // SHGetFileInfo関数で使用する構造体
+	public struct SHFILEINFO {
+		public IntPtr hIcon;
+		public IntPtr iIcon;
+		public uint dwAttributes;
+		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 260 )]
+		public string szDisplayName;
+		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 80 )]
+		public string szTypeName;
+	};
+#endif
+
+
+	#region Icon
+
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex,
+	//	IntPtr[] phiconLarge, IntPtr phiconSmall, uint nIcons );
+
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex,
+	//		IntPtr phiconLarge, IntPtr phiconSmall, uint nIcons );
+
+	// ExtractIconEx 複数の引数指定方法により、オーバーロード定義する。
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, uint nIcons );
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr phiconSmall, uint nIcons );
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr phiconLarge, IntPtr[] phiconSmall, uint nIcons );
+	//[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
+	//public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons );
+
+	//[DllImport( "User32.dll" )]
+	//public static extern bool DestroyIcon( IntPtr hIcon );
+
+
+	#endregion
 
 #if false
 	
@@ -98,35 +146,8 @@ public static class Win32 {
 	public static extern uint GetShortPathName( [MarshalAs( UnmanagedType.LPTStr )] string lpszLongPath, [MarshalAs( UnmanagedType.LPTStr )] StringBuilder lpszShortPath, uint cchBuffer );
 
 
-	[DllImport( "User32.dll" )]
-	public static extern bool DestroyIcon( IntPtr hIcon );
 
-	// ExtractIconEx 複数の引数指定方法により、オーバーロード定義する。
-	[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
-	public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, uint nIcons );
-	[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
-	public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr phiconSmall, uint nIcons );
-	[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
-	public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, IntPtr phiconLarge, IntPtr[] phiconSmall, uint nIcons );
-	[DllImport( "Shell32.dll", CharSet = CharSet.Unicode )]
-	public static extern uint ExtractIconEx( string lpszFile, int nIconIndex, out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons );
-	// SHGetFileInfo関数
-	[DllImport( "shell32.dll" )]
-	public static extern IntPtr SHGetFileInfo( string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags );
-	// SHGetFileInfo関数で使用するフラグ
-	public const uint SHGFI_ICON = 0x100; // アイコン・リソースの取得
-	public const uint SHGFI_LARGEICON = 0x0; // 大きいアイコン
-	public const uint SHGFI_SMALLICON = 0x1; // 小さいアイコン
-																					 // SHGetFileInfo関数で使用する構造体
-	public struct SHFILEINFO {
-		public IntPtr hIcon;
-		public IntPtr iIcon;
-		public uint dwAttributes;
-		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 260 )]
-		public string szDisplayName;
-		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 80 )]
-		public string szTypeName;
-	};
+	
 #endif
 }
 
