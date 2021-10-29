@@ -52,6 +52,23 @@ namespace HananokiLib {
 		}
 
 
+		public static void mv( string src, string dst ) {
+
+			if( File.Exists( src ) ) {
+				if( File.Exists( dst ) ) {
+					File.Delete( dst );
+				}
+				File.Move( src, dst );
+			}
+
+			if( Directory.Exists( src ) ) {
+				if( Directory.Exists( dst ) ) {
+					Directory.Delete( dst );
+				}
+				Directory.Move( src, dst );
+			}
+		}
+
 
 		public static void rm( string path, bool recursive = false ) {
 			try {

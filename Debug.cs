@@ -20,6 +20,17 @@ namespace HananokiLib {
 			Console.WriteLine( e.ToString() );
 		}
 
+
+
+		[System.Diagnostics.Conditional( "DEBUG" )]
+		public static void Log( string m ) {
+#if TRACE
+			if( string.IsNullOrEmpty( m ) ) return;
+			Console.WriteLine( m ) ;
+			HananokiLib.Log.Info( m );
+#endif
+		}
+
 		[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Log( string m, params object[] args ) {
 #if TRACE
