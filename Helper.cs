@@ -67,6 +67,9 @@ namespace HananokiLib {
 
 		public static bool ReadJson<T>( ref T obj, string filepath ) where T : new() {
 			try {
+				if(obj==null) {
+					obj = new T();
+				}
 				using( var st = new StreamReader( filepath ) ) {
 					obj = LitJson.JsonMapper.ToObject<T>( st.ReadToEnd() );
 					if( obj == null ) {
