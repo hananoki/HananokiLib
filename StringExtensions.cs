@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -12,9 +10,21 @@ namespace HananokiLib {
 		public static bool Has( this int i, int chk ) {
 			return 0 != ( i & chk ) ? true : false;
 		}
+		public static void Enable( ref this int i, int chk ) {
+			i |= chk;
+		}
+
+		public static void Disable( ref this int i, int chk ) {
+			i &= ~chk;
+		}
+		public static void Toggle( ref this int i, int flag, bool b ) {
+			if( b ) i |= flag;
+			else i &= ~flag;
+		}
 	}
 
-		public static class StringExtensions {
+
+	public static class StringExtensions {
 		public static string GetValue( this Dictionary<string, string> dic, string key ) {
 			return dic.ContainsKey( key ) ? dic[ key ] : "";
 		}

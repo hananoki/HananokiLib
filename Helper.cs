@@ -21,6 +21,15 @@ namespace HananokiLib {
 			}
 		}
 
+		public static string version {
+			get {
+				var assembly = Assembly.GetExecutingAssembly().GetName();
+				var ver = assembly.Version;
+				return $"{ver.Major}.{ver.Minor}.{ver.Build}";
+			}
+		}
+
+
 		public static void _init() {
 			var location = Assembly.GetExecutingAssembly().Location;
 			s_appName = location.getBaseName();
@@ -36,7 +45,7 @@ namespace HananokiLib {
 			}
 		}
 
-		
+
 
 		public static bool hasDependUpdate( string srcFilePath, string dstFilePath ) {
 			var dst = new FileInfo( dstFilePath );
@@ -67,7 +76,7 @@ namespace HananokiLib {
 
 		public static bool ReadJson<T>( ref T obj, string filepath ) where T : new() {
 			try {
-				if(obj==null) {
+				if( obj == null ) {
 					obj = new T();
 				}
 				using( var st = new StreamReader( filepath ) ) {
@@ -81,7 +90,8 @@ namespace HananokiLib {
 				Debug.Log( $"FileNotFoundException: {filepath} が見つかりません" );
 				return false;
 			}
-			catch( Exception ) {
+			catch( Exception e ) {
+				Debug.Exception(e);
 			}
 			return true;
 		}
