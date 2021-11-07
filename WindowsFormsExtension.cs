@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -8,6 +9,38 @@ using System.Windows.Forms;
 
 namespace HananokiLib {
 
+	/////////////////////////////////////////
+	public static class TextBoxHelper {
+		public static string def = "def";
+		//TextBox m_textBox;
+		public static void setText( this TextBox textBox, string path) {
+			WindowsFormExtended.DoSomethingWithoutEvents(
+					textBox,
+					() => textBox.Text = path.isEmpty() ? def : path
+					);
+
+			updateTextStatus( textBox  );
+		}
+
+		public static void updateTextStatus( this TextBox textBox  ) {
+			if( textBox.Text.isEmpty() ) {
+				textBox.ForeColor = Color.Silver;
+				textBox.BackColor = SystemColors.Window;
+			}
+			else {
+				textBox.ForeColor = SystemColors.WindowText;
+				if( textBox.Text.isExistsFile() ) {
+					textBox.BackColor = SystemColors.Window;
+				}
+				else if(def != textBox.Text ) {
+					textBox.BackColor = Color.Pink;
+				}
+			}
+		}
+	}
+
+
+	/////////////////////////////////////////
 	public static class WindowsFormsExtension {
 		public static void SetDoubleBuffered( this ListView listview, bool b ) {
 			PropertyInfo prop = listview.GetType().GetProperty( "DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic );

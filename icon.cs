@@ -1,7 +1,9 @@
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace HananokiLib {
 
@@ -19,7 +21,7 @@ namespace HananokiLib {
 			bmp = icon.ToBitmap();
 		}
 
-		
+
 		public static Bitmap info {
 			get {
 				icon2bmp( ref m_bmpInfoCache, SystemIcons.Information );
@@ -56,6 +58,28 @@ namespace HananokiLib {
 		public static Bitmap get( string name ) {
 			Bitmap bmp;
 			m_bmpCache.TryGetValue( name, out bmp );
+			return bmp;
+		}
+
+
+		/////////////////////////////////////////
+		public static Bitmap file( string filepath ) {
+			if( m_bmpCache == null ) {
+				m_bmpCache = new Dictionary<string, Bitmap>();
+			}
+			if( filepath.isEmpty() ) return null;
+			var ext = filepath.getExt();
+			Bitmap bmp;
+			m_bmpCache.TryGetValue( ext, out bmp );
+			if( bmp != null ) return bmp;
+			if( !filepath.isExistsFile() ) return null;
+
+			var shinfo = new Win32.SHFILEINFO();
+			IntPtr hSuccess = Win32.SHGetFileInfo( filepath, 0, ref shinfo, (uint) Marshal.SizeOf( shinfo ), Win32.SHGFI_ICON | Win32.SHGFI_SMALLICON				);
+			if( hSuccess == IntPtr.Zero ) return null;
+			bmp = Icon.FromHandle( shinfo.hIcon ).ToBitmap();
+			m_bmpCache.Add( ext, bmp );
+
 			return bmp;
 		}
 	}
