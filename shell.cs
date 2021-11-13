@@ -31,6 +31,14 @@ namespace HananokiLib {
 			Debug.Log( $"SetEnvironmentVariable > {path}" );
 		}
 
+		public static void start( string fileName ) {
+			System.Diagnostics.Process.Start( fileName );
+		}
+
+		public static void start( string fileName, string arguments ) {
+			System.Diagnostics.Process.Start( fileName, arguments );
+		}
+
 
 		async public static Task<CommandOutput> startProcessAsync( string filename, string arguments ) {
 			var task = Task<int>.Run( () => {
@@ -40,12 +48,12 @@ namespace HananokiLib {
 				return result;
 			} );
 			await task;
-			
+
 			return task.Result;
 		}
 
 
-		public static CommandOutput startProcess( string filename, string arguments, string workingDirectory ="" ) {
+		public static CommandOutput startProcess( string filename, string arguments, string workingDirectory = "" ) {
 			Log.Info( $"{filename} {arguments}" );
 
 

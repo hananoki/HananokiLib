@@ -9,20 +9,226 @@ using System.Windows.Forms;
 
 namespace HananokiLib {
 
+	//////////////////////////////////////////////////////////////////////////////////
+	public class StatusBarMessage {
+		ToolStripStatusLabel m_label;
+		Form m_form;
+		public Timer m_timer;
+
+		public enum NotifyType {
+			None,
+			Info,
+			Warning,
+			Error,
+		}
+
+
+		public StatusBarMessage( Form form, ToolStripStatusLabel label ) {
+			m_label = label;
+			m_form = form;
+
+			m_label.Text = "";
+
+			m_timer = new Timer();
+			m_timer.Tick += new EventHandler( ( s, ee ) => {
+				m_label.Text = "";
+				m_label.Image = null;
+				m_timer.Stop();
+			} );
+		}
+
+
+		/////////////////////////////////////////
+		public void setNotifyText( string text = "", NotifyType type = NotifyType.Info, int interval = 10000 ) {
+
+			m_form.Invoke( new Action( () => {
+				m_label.Text = text;
+				switch( type ) {
+				case NotifyType.None:
+					m_label.Image = null;
+					break;
+				case NotifyType.Info:
+					m_label.Image = icon.info;
+					break;
+				case NotifyType.Warning:
+					m_label.Image = icon.warning;
+					break;
+				case NotifyType.Error:
+					m_label.Image = icon.error;
+					break;
+				}
+				m_timer.Stop();
+				if( 1 <= interval ) {
+					m_timer.Interval = interval;
+					m_timer.Start();
+				}
+			} ) );
+		}
+
+
+		/////////////////////////////////////////
+		public void clearNotifyText() {
+			m_label.Text = "";
+			m_label.Image = null;
+		}
+
+	}
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	public class TextBoxGuide : TextBox {
+		//TextBox m_txtbox;
+		public string def = "def";
+		Func<string, string> m_setAction;
+		public bool checkMode;
+
+		//static Dictionary<TextBox, TextBoxGuide> m_dic;
+
+
+		public void init(  string msg, Func<string, string> setText ) {
+			//m_txtbox = t;
+			AllowDrop = true;
+			m_setAction = setText;
+			TextChanged += onTextChanged;
+			DragEnter += onDragEnter;
+			DragDrop += onDragDrop;
+			Enter += onEnter;
+			Leave += onLeave;
+			def = msg;
+			checkMode = true;
+
+			//if( m_dic == null ) {
+			//	m_dic = new Dictionary<TextBox, TextBoxGuide>();
+			//}
+			//m_dic.Add( this, this );
+		}
+
+
+		//TextBox m_textBox;
+		public void setText( string path ) {
+			WindowsFormExtended.DoSomethingWithoutEvents(
+					this,
+					() => Text = path.isEmpty() ? def : path
+					);
+
+			updateTextStatus();
+		}
+
+
+		public void updateTextStatus() {
+			if( Text.isEmpty() || Text == def ) {
+				ForeColor = Color.Silver;
+				BackColor = SystemColors.Window;
+			}
+			else {
+				ForeColor = SystemColors.WindowText;
+				if( Text.isExistsFile() || Text.isExistsDirectory() ) {
+					BackColor = SystemColors.Window;
+				}
+				else if( def != Text && checkMode ) {
+					BackColor = Color.Pink;
+				}
+			}
+		}
+
+
+		void onLeave( object sender, EventArgs e ) {
+			var txtbox = (TextBoxGuide) sender;
+
+			//var te = m_dic[ txtbox ];
+
+			if( txtbox.Text.Length <= 0 || txtbox.Text == txtbox.def ) {
+				txtbox.Text = txtbox.def;
+				txtbox.ForeColor = Color.Silver;
+			}
+			else {
+				txtbox.ForeColor = SystemColors.WindowText;
+			}
+		}
+
+		void onEnter( object sender, EventArgs e ) {
+			var txtbox = (TextBoxGuide) sender;
+
+			//var te = m_dic[ txtbox ];
+
+			if( txtbox.Text == txtbox.def ) {
+				txtbox.Text = string.Empty;
+				txtbox.ForeColor = SystemColors.WindowText;
+			}
+		}
+
+
+		void onDragEnter( object sender, DragEventArgs e ) {
+			var txtbox = (TextBoxGuide) sender;
+
+			//var te = m_dic[ txtbox ];
+			if( e.Data.GetDataPresent( DataFormats.FileDrop ) ) {
+
+				// ドラッグ中のファイルやディレクトリの取得
+				var drags = (string[]) e.Data.GetData( DataFormats.FileDrop );
+
+				//foreach( var d in drags ) {
+				//	if( !File.Exists( d ) ) {
+				//		// ファイル以外であればイベント・ハンドラを抜ける
+				//		return;
+				//	}
+				//}
+
+				e.Effect = DragDropEffects.Link;
+			}
+		}
+
+
+		void onDragDrop( object sender, DragEventArgs e ) {
+			var txtbox = (TextBoxGuide) sender;
+
+			//var te = m_dic[ txtbox ];
+			string[] files = (string[]) e.Data.GetData( DataFormats.FileDrop );
+
+			//listBox1.Items.AddRange( files ); // リストボックスに表示
+			if( txtbox.m_setAction != null ) {
+				txtbox.Text = txtbox.m_setAction?.Invoke( files[ 0 ] );
+			}
+			else {
+				txtbox.Text = files[ 0 ];
+			}
+		}
+
+
+		void onTextChanged( object sender, EventArgs e ) {
+			var txtbox = (TextBoxGuide) sender;
+
+			//var te = m_dic[ txtbox ];
+
+			if( txtbox.Text != txtbox.def ) {
+				//MainForm.config.sevenZipPath = txtbox.Text;
+				var ss = m_setAction?.Invoke( txtbox.Text );
+				WindowsFormExtended.DoSomethingWithoutEvents(
+					txtbox,
+					() => txtbox.Text = ss
+					);
+			}
+			txtbox.updateTextStatus();
+			//MainForm.config.save();
+		}
+	}
+
+
 	/////////////////////////////////////////
 	public static class TextBoxHelper {
 		public static string def = "def";
 		//TextBox m_textBox;
-		public static void setText( this TextBox textBox, string path) {
+		public static void setText( this TextBox textBox, string path ) {
 			WindowsFormExtended.DoSomethingWithoutEvents(
 					textBox,
 					() => textBox.Text = path.isEmpty() ? def : path
 					);
 
-			updateTextStatus( textBox  );
+			updateTextStatus( textBox );
 		}
 
-		public static void updateTextStatus( this TextBox textBox  ) {
+		public static void updateTextStatus( this TextBox textBox ) {
 			if( textBox.Text.isEmpty() ) {
 				textBox.ForeColor = Color.Silver;
 				textBox.BackColor = SystemColors.Window;
@@ -32,7 +238,7 @@ namespace HananokiLib {
 				if( textBox.Text.isExistsFile() ) {
 					textBox.BackColor = SystemColors.Window;
 				}
-				else if(def != textBox.Text ) {
+				else if( def != textBox.Text ) {
 					textBox.BackColor = Color.Pink;
 				}
 			}
@@ -146,9 +352,9 @@ namespace HananokiLib {
 
 		private sealed class EventHandlerInfo {
 			public EventHandlerInfo( object key, EventHandlerList eventHandlerList, Delegate eventHandler ) {
-				this.Key = key;
-				this.EventHandlerList = eventHandlerList;
-				this.EventHandler = eventHandler;
+				Key = key;
+				EventHandlerList = eventHandlerList;
+				EventHandler = eventHandler;
 			}
 			public object Key { get; private set; }
 			public EventHandlerList EventHandlerList { get; private set; }

@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 
@@ -20,6 +20,25 @@ namespace HananokiLib {
 		public static void Toggle( ref this int i, int flag, bool b ) {
 			if( b ) i |= flag;
 			else i &= ~flag;
+		}
+
+		sealed class CommonSelector<T, TKey> : IEqualityComparer<T> {
+			Func<T, TKey> m_selector;
+
+			public CommonSelector( Func<T, TKey> selector ) {
+				m_selector = selector;
+			}
+
+			public bool Equals( T x, T y ) {
+				return m_selector( x ).Equals( m_selector( y ) );
+			}
+
+			public int GetHashCode( T obj ) {
+				return m_selector( obj ).GetHashCode();
+			}
+		}
+		public static IEnumerable<T> Distinct<T, TKey>( this IEnumerable<T> source, Func<T, TKey> selector ) {
+			return source.Distinct( new CommonSelector<T, TKey>( selector ) );
 		}
 	}
 
