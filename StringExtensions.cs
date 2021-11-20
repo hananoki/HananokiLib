@@ -106,10 +106,10 @@ namespace HananokiLib {
 			return Regex.Replace( s1, s2, s3, RegexOptions.Singleline );
 		}
 
-		public static bool match( this string s1, string s2, Action<GroupCollection> func ) {
+		public static bool match( this string s1, string s2, Action<GroupCollection> func = null ) {
 			var mm = Regex.Matches( s1, s2 );
 			if( 0 < mm.Count ) {
-				func( mm[ 0 ].Groups );
+				func?.Invoke( mm[ 0 ].Groups );
 				return true;
 			}
 			return false;

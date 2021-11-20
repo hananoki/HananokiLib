@@ -10,10 +10,6 @@ namespace HananokiLib {
 			Win32.AllocConsole();
 		}
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
-		public static void Log( int m ) {
-			Console.WriteLine( m );
-		}
 
 		[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Error( Exception e ) {
@@ -23,11 +19,11 @@ namespace HananokiLib {
 
 
 		[System.Diagnostics.Conditional( "DEBUG" )]
-		public static void Log( string m ) {
+		public static void Log<T>( T m ) where T : IConvertible {
 #if TRACE
-			if( string.IsNullOrEmpty( m ) ) return;
-			Console.WriteLine( m ) ;
-			HananokiLib.Log.Info( m );
+			//if( string.IsNullOrEmpty( m ) ) return;
+			Console.WriteLine( m.ToString() ) ;
+			HananokiLib.Log.Info( m.ToString() );
 #endif
 		}
 

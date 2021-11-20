@@ -61,7 +61,7 @@ namespace HananokiLib {
 			return bmp;
 		}
 
-
+#if ENABLE_SHELL32_DLL
 		/////////////////////////////////////////
 		public static Bitmap file( string filepath ) {
 			if( m_bmpCache == null ) {
@@ -82,5 +82,6 @@ namespace HananokiLib {
 
 			return bmp;
 		}
+#endif
 	}
 }
