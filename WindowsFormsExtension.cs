@@ -253,6 +253,12 @@ namespace HananokiLib {
 			prop.SetValue( listview, b, null );
 		}
 
+		public static void ApplyVirtualListSize( this ListView listview ) {
+			var items = listview.Tag as List<ListViewItem>;
+			if( items == null ) return;
+			listview.VirtualListSize = items.Count();
+		}
+
 		public static void invalidate( this ListViewItem item ) {
 			item.ListView?.Invalidate( item.Bounds );
 		}

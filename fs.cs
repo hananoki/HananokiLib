@@ -86,5 +86,19 @@ namespace HananokiLib {
 				Debug.Exception( e );
 			}
 		}
+
+		public static int rm2( string fullPath ) {
+
+			var sf = new Win32.SHFILEOPSTRUCT();
+
+			sf.wFunc = Win32.FileFuncFlags.FO_DELETE; // 削除を指示します。
+			sf.fFlags = Win32.FILEOP_FLAGS.FOF_ALLOWUNDO; //「元に戻す」を有効にします。
+																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_NOERRORUI; //エラー画面を表示しません。
+																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_SILENT; //進捗ダイアログを表示しません。
+																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_NOCONFIRMATION; //削除確認ダイアログを表示しません。
+			sf.pFrom = fullPath + "\0";
+
+			return Win32.SHFileOperation( ref sf );
+		}
 	}
 }
