@@ -74,6 +74,53 @@ namespace HananokiLib {
 
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+	public class TListView<TItem> : ListView where TItem : ListViewItem {
+		public List<TItem> m_items = new List<TItem>();
+
+		public TListView() {
+			this.VirtualMode = true;
+			this.SetDoubleBuffered( true );
+			this.RetrieveVirtualItem += OnRetrieveVirtualItem;
+			this.MouseClick += OnMouseClick;
+		}
+
+		public void AddItem( TItem item ) {
+			m_items.Add( item );
+		}
+		public void ClearItems(  ) {
+			//this.Clear();
+			m_items.Clear();
+		}
+
+		public void ApplyVirtualListSize() {
+			VirtualListSize = m_items.Count;
+		}
+		
+		void OnRetrieveVirtualItem( object sender, RetrieveVirtualItemEventArgs e ) {
+			var lstView = (ListView) sender;
+			//var items = (List<TItem>) lstView.Tag;
+
+			if( m_items.Count <= e.ItemIndex ) return;
+			//if( items == null ) return;
+
+			e.Item = m_items[ e.ItemIndex ];
+		}
+
+		void OnMouseClick( object sender, MouseEventArgs e ) {
+			var listview = (ListView) sender;
+			var item = listview.GetItemAt( e.X, e.Y ) as TItem;
+
+			if( item != null ) {
+				if( e.X < ( item.Bounds.Left + 16 ) ) {
+					item.invertChecked();
+					OnMouseClicked( item );
+				}
+			}
+		}
+		public virtual void OnMouseClicked( TItem item ) {
+		}
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -83,13 +130,23 @@ namespace HananokiLib {
 		Func<string, string> m_setAction;
 		public bool checkMode;
 
-		//static Dictionary<TextBox, TextBoxGuide> m_dic;
+		public Func<TextBoxGuide, bool> onValidate;
 
+		public TextBoxGuide() {
+			onValidate = ( self ) => {
+				return Text.isExistsFile() || Text.isExistsDirectory();
+			};
+		}
 
-		public void init(  string msg, Func<string, string> setText ) {
+		public void init( string msg, Func<string, string> setText = null ) {
 			//m_txtbox = t;
 			AllowDrop = true;
-			m_setAction = setText;
+			if( setText == null ) {
+				m_setAction = InText => InText;
+			}
+			else {
+				m_setAction = setText;
+			}
 			TextChanged += onTextChanged;
 			DragEnter += onDragEnter;
 			DragDrop += onDragDrop;
@@ -123,7 +180,7 @@ namespace HananokiLib {
 			}
 			else {
 				ForeColor = SystemColors.WindowText;
-				if( Text.isExistsFile() || Text.isExistsDirectory() ) {
+				if( onValidate( this ) ) {
 					BackColor = SystemColors.Window;
 				}
 				else if( def != Text && checkMode ) {
@@ -254,9 +311,13 @@ namespace HananokiLib {
 		}
 
 		public static void ApplyVirtualListSize( this ListView listview ) {
-			var items = listview.Tag as List<ListViewItem>;
+			var items = GetListViewItems( listview );
 			if( items == null ) return;
 			listview.VirtualListSize = items.Count();
+		}
+
+		public static List<ListViewItem> GetListViewItems( this ListView listview ) {
+			return listview.Tag as List<ListViewItem>;
 		}
 
 		public static void invalidate( this ListViewItem item ) {
