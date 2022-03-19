@@ -94,11 +94,27 @@ namespace HananokiLib {
 			sf.wFunc = Win32.FileFuncFlags.FO_DELETE; // 削除を指示します。
 			sf.fFlags = Win32.FILEOP_FLAGS.FOF_ALLOWUNDO; //「元に戻す」を有効にします。
 																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_NOERRORUI; //エラー画面を表示しません。
-																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_SILENT; //進捗ダイアログを表示しません。
-																										//sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_NOCONFIRMATION; //削除確認ダイアログを表示しません。
+			// 単体ファイルの削除なので複数ファイル削除で使用されると進捗ダイアログがOn/Offが頻発する
+			// 結果的にメインウィンドウのフォーカスが入れ食い状態になる
+			sf.fFlags = sf.fFlags | Win32.FILEOP_FLAGS.FOF_SILENT; //進捗ダイアログを表示しません。
+																											 //sf.fFlags = sf.fFlags | FILEOP_FLAGS.FOF_NOCONFIRMATION; //削除確認ダイアログを表示しません。
 			sf.pFrom = fullPath + "\0";
 
 			return Win32.SHFileOperation( ref sf );
+		}
+
+
+
+		/// 引用 https://www.curict.com/item/48/480f4d2.html
+		public static bool isWritableFile( string filePath ) {
+			try {
+				using( FileStream fp = File.Open( filePath, FileMode.Open, FileAccess.Write ) ) {
+					return true;
+				}
+			}
+			catch {
+				return false;
+			}
 		}
 	}
 }

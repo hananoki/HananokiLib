@@ -1,7 +1,5 @@
-using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 
 namespace HananokiLib {
@@ -37,5 +35,18 @@ namespace HananokiLib {
 					.Select( c => Prettyfy( c ) )
 					.ToArray();
 		}
+
+
+		public static string[] GetDirectories( string path, string searchPattern = "", SearchOption searchOption = SearchOption.TopDirectoryOnly ) {
+			var _path = path.separatorToOS();
+
+			if( !Directory.Exists( _path ) ) return new string[ 0 ];
+
+			return Directory
+					.GetDirectories( _path, searchPattern, searchOption )
+					.Select( c => Prettyfy( c ) )
+					.ToArray();
+		}
+
 	}
 }

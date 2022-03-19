@@ -11,10 +11,10 @@ namespace HananokiLib {
 		}
 
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
-		public static void Error( Exception e ) {
-			Console.WriteLine( e.ToString() );
-		}
+		//[System.Diagnostics.Conditional( "DEBUG" )]
+		//public static void Error( Exception e ) {
+		//	Console.WriteLine( e.ToString() );
+		//}
 
 
 

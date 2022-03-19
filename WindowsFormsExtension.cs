@@ -83,20 +83,25 @@ namespace HananokiLib {
 			this.SetDoubleBuffered( true );
 			this.RetrieveVirtualItem += OnRetrieveVirtualItem;
 			this.MouseClick += OnMouseClick;
+			this.DoubleClick += OnDoubleClick;
 		}
 
 		public void AddItem( TItem item ) {
 			m_items.Add( item );
 		}
-		public void ClearItems(  ) {
-			//this.Clear();
+		public void ClearItems() {
+			//Items.Clear();
 			m_items.Clear();
+		}
+
+		public TItem GetSelectItem() {
+			return m_items[ SelectedIndices[ 0 ] ];
 		}
 
 		public void ApplyVirtualListSize() {
 			VirtualListSize = m_items.Count;
 		}
-		
+
 		void OnRetrieveVirtualItem( object sender, RetrieveVirtualItemEventArgs e ) {
 			var lstView = (ListView) sender;
 			//var items = (List<TItem>) lstView.Tag;
@@ -106,6 +111,11 @@ namespace HananokiLib {
 
 			e.Item = m_items[ e.ItemIndex ];
 		}
+
+		public virtual void OnDoubleClick( object sender, EventArgs e ) {
+			OnDoubleClicked( m_items[ SelectedIndices[ 0 ] ] as TItem );
+		}
+		public virtual void OnDoubleClicked( TItem item ) { }
 
 		void OnMouseClick( object sender, MouseEventArgs e ) {
 			var listview = (ListView) sender;
@@ -329,6 +339,11 @@ namespace HananokiLib {
 			item.ListView?.Invalidate( item.Bounds );
 		}
 
+		public static string[] GetCheckedStringArray( this CheckedListBox chkListBox ) {
+			var lst = new List<string>( 64 );
+			foreach( var a in chkListBox.CheckedItems ) lst.Add( a.ToString() );
+			return lst.ToArray();
+		}
 	}
 
 
