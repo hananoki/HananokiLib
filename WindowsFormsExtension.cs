@@ -97,6 +97,11 @@ namespace HananokiLib {
 		public TItem GetSelectItem() {
 			return m_items[ SelectedIndices[ 0 ] ];
 		}
+		public TItem[] GetSelectItems() {
+			var lst = new List<TItem>();
+			foreach( var i in SelectedIndices ) lst.Add( m_items[ (int) i  ] );
+			return lst.ToArray();
+		}
 
 		public void ApplyVirtualListSize() {
 			VirtualListSize = m_items.Count;

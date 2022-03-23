@@ -95,6 +95,20 @@ namespace HananokiLib {
 			}
 			return true;
 		}
+
+
+		/// 引用 https://dobon.net/vb/dotnet/system/isadmin.html
+		public static bool IsAdministrator() {
+			//現在のユーザーを表すWindowsIdentityオブジェクトを取得する
+			System.Security.Principal.WindowsIdentity wi =
+					System.Security.Principal.WindowsIdentity.GetCurrent();
+			//WindowsPrincipalオブジェクトを作成する
+			System.Security.Principal.WindowsPrincipal wp =
+					new System.Security.Principal.WindowsPrincipal( wi );
+			//Administratorsグループに属しているか調べる
+			return wp.IsInRole(
+					System.Security.Principal.WindowsBuiltInRole.Administrator );
+		}
 	}
 }
 

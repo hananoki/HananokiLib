@@ -57,6 +57,7 @@ namespace HananokiLib {
 		}
 
 		public static string separatorToOS( this string s ) {
+			if( s.isEmpty() ) return string.Empty;
 			return s.Replace( '/', Path.DirectorySeparatorChar );
 		}
 

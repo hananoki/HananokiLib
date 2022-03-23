@@ -63,7 +63,9 @@ namespace HananokiLib {
 
 #if ENABLE_SHELL32_DLL
 		/////////////////////////////////////////
-		public static Bitmap file( string filepath ) {
+		public static Bitmap file( string _filepath ) {
+			string filepath = _filepath.separatorToOS();
+
 			if( m_bmpCache == null ) {
 				m_bmpCache = new Dictionary<string, Bitmap>();
 			}
