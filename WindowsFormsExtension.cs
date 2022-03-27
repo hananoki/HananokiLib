@@ -44,18 +44,18 @@ namespace HananokiLib {
 			m_form.Invoke( new Action( () => {
 				m_label.Text = text;
 				switch( type ) {
-				case NotifyType.None:
-					m_label.Image = null;
-					break;
-				case NotifyType.Info:
-					m_label.Image = icon.info;
-					break;
-				case NotifyType.Warning:
-					m_label.Image = icon.warning;
-					break;
-				case NotifyType.Error:
-					m_label.Image = icon.error;
-					break;
+					case NotifyType.None:
+						m_label.Image = null;
+						break;
+					case NotifyType.Info:
+						m_label.Image = icon.info;
+						break;
+					case NotifyType.Warning:
+						m_label.Image = icon.warning;
+						break;
+					case NotifyType.Error:
+						m_label.Image = icon.error;
+						break;
 				}
 				m_timer.Stop();
 				if( 1 <= interval ) {
@@ -99,11 +99,12 @@ namespace HananokiLib {
 		}
 		public TItem[] GetSelectItems() {
 			var lst = new List<TItem>();
-			foreach( var i in SelectedIndices ) lst.Add( m_items[ (int) i  ] );
+			foreach( var i in SelectedIndices ) lst.Add( m_items[ (int) i ] );
 			return lst.ToArray();
 		}
 
 		public void ApplyVirtualListSize() {
+			VirtualListSize = 0;
 			VirtualListSize = m_items.Count;
 		}
 
@@ -147,13 +148,15 @@ namespace HananokiLib {
 
 		public Func<TextBoxGuide, bool> onValidate;
 
+		/////////////////////////////////////////
 		public TextBoxGuide() {
 			onValidate = ( self ) => {
 				return Text.isExistsFile() || Text.isExistsDirectory();
 			};
 		}
 
-		public void init( string msg, Func<string, string> setText = null ) {
+		/////////////////////////////////////////
+		public void Init( string msg, Func<string, string> setText = null ) {
 			//m_txtbox = t;
 			AllowDrop = true;
 			if( setText == null ) {
@@ -177,18 +180,27 @@ namespace HananokiLib {
 		}
 
 
-		//TextBox m_textBox;
-		public void setText( string path ) {
+		/////////////////////////////////////////
+		public bool IsValidText() {
+			if( Text == def ) return false;
+			if( Text.isEmpty() ) return false;
+			return true;
+		}
+
+
+		/////////////////////////////////////////
+		public void SetText( string path ) {
 			WindowsFormExtended.DoSomethingWithoutEvents(
 					this,
 					() => Text = path.isEmpty() ? def : path
 					);
 
-			updateTextStatus();
+			UpdateTextStatus();
 		}
 
 
-		public void updateTextStatus() {
+		/////////////////////////////////////////
+		public void UpdateTextStatus() {
 			if( Text.isEmpty() || Text == def ) {
 				ForeColor = Color.Silver;
 				BackColor = SystemColors.Window;
@@ -205,6 +217,7 @@ namespace HananokiLib {
 		}
 
 
+		/////////////////////////////////////////
 		void onLeave( object sender, EventArgs e ) {
 			var txtbox = (TextBoxGuide) sender;
 
@@ -281,7 +294,7 @@ namespace HananokiLib {
 					() => txtbox.Text = ss
 					);
 			}
-			txtbox.updateTextStatus();
+			txtbox.UpdateTextStatus();
 			//MainForm.config.save();
 		}
 	}
