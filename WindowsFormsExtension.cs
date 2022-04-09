@@ -77,7 +77,7 @@ namespace HananokiLib {
 	//////////////////////////////////////////////////////////////////////////////////
 	public class TListView<TItem> : ListView where TItem : ListViewItem {
 		public List<TItem> m_items = new List<TItem>();
-
+		public int doubleClickIndex;
 		public TListView() {
 			this.VirtualMode = true;
 			this.SetDoubleBuffered( true );
@@ -97,6 +97,11 @@ namespace HananokiLib {
 		public TItem GetSelectItem() {
 			return m_items[ SelectedIndices[ 0 ] ];
 		}
+
+		public TItem GetDoubleClickItem() {
+			return m_items[ doubleClickIndex ];
+		}
+
 		public TItem[] GetSelectItems() {
 			var lst = new List<TItem>();
 			foreach( var i in SelectedIndices ) lst.Add( m_items[ (int) i ] );
@@ -119,8 +124,10 @@ namespace HananokiLib {
 		}
 
 		public virtual void OnDoubleClick( object sender, EventArgs e ) {
-			OnDoubleClicked( m_items[ SelectedIndices[ 0 ] ] as TItem );
+			doubleClickIndex = SelectedIndices[ 0 ];
+			OnDoubleClicked( m_items[ doubleClickIndex ] as TItem );
 		}
+
 		public virtual void OnDoubleClicked( TItem item ) { }
 
 		void OnMouseClick( object sender, MouseEventArgs e ) {
