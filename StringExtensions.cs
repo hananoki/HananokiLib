@@ -40,6 +40,18 @@ namespace HananokiLib {
 		public static IEnumerable<T> Distinct<T, TKey>( this IEnumerable<T> source, Func<T, TKey> selector ) {
 			return source.Distinct( new CommonSelector<T, TKey>( selector ) );
 		}
+
+		public static bool IsEmpty<T>( this T[] s ) {
+			if( s == null ) return true;
+			if( s.Length == 0 ) return true;
+			return false;
+		}
+
+		public static bool IsEmpty<T>( this List<T> s ) {
+			if( s == null ) return true;
+			if( s.Count == 0 ) return true;
+			return false;
+		}
 	}
 
 
