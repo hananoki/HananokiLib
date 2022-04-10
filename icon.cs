@@ -67,17 +67,17 @@ namespace HananokiLib {
 #if ENABLE_SHELL32_DLL
 		/////////////////////////////////////////
 		public static Bitmap file( string _filepath ) {
-			string filepath = _filepath.separatorToOS();
+			string filepath = _filepath.SeparatorToOS();
 
 			if( m_bmpCache == null ) {
 				m_bmpCache = new Dictionary<string, Bitmap>();
 			}
-			if( filepath.isEmpty() ) return null;
-			var ext = filepath.getExt();
+			if( filepath.IsEmpty() ) return null;
+			var ext = filepath.GetExtension();
 			Bitmap bmp;
 			m_bmpCache.TryGetValue( ext, out bmp );
 			if( bmp != null ) return bmp;
-			if( !filepath.isExistsFile() ) return null;
+			if( !filepath.IsExistsFile() ) return null;
 
 			var shinfo = new Win32.SHFILEINFO();
 			IntPtr hSuccess = Win32.SHGetFileInfo( filepath, 0, ref shinfo, (uint) Marshal.SizeOf( shinfo ), Win32.SHGFI_ICON | Win32.SHGFI_SMALLICON				);

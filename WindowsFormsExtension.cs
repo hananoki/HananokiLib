@@ -101,7 +101,7 @@ namespace HananokiLib {
 		}
 
 		/////////////////////////////////////////
-		public void Init( string msg, Func<TextBoxGuide,string, string>? setText = null ) {
+		public void Init( string msg, Func<TextBoxGuide,string, string> setText = null ) {
 			//m_txtbox = t;
 			AllowDrop = true;
 			if( setText == null ) {
