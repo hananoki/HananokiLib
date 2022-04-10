@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#pragma warning disable 8604
+
+using System.Text;
 
 
 namespace HananokiLib {

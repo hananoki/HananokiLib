@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 8604
+
+using System;
 
 
 namespace HananokiLib {

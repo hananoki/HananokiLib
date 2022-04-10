@@ -1,4 +1,6 @@
-﻿#region Header
+﻿#pragma warning disable 8618
+
+#region Header
 /**
  * JsonWriter.cs
  *   Stream-like facility to output JSON text.

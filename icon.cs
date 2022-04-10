@@ -1,3 +1,6 @@
+#pragma warning disable 8600
+#pragma warning disable 8603
+#pragma warning disable 8618
 
 using System;
 using System.Collections.Generic;

@@ -1,3 +1,8 @@
+#pragma warning disable 8600
+#pragma warning disable 8603
+#pragma warning disable 8618
+#pragma warning disable 8625
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +31,8 @@ namespace HananokiLib {
 		}
 
 		public static void addData( string label, string filePath ) {
+			if( filePath.IsEmpty() ) return;
+
 			if( m_cache == null ) {
 				m_cache = new Dictionary<string, byte[]>();
 			}

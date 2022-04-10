@@ -1,4 +1,6 @@
-﻿#region Header
+﻿#pragma warning disable 8618
+
+#region Header
 /**
  * Lexer.cs
  *   JSON lexer implementation based on a finite state machine.

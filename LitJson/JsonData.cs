@@ -1,4 +1,12 @@
-﻿#region Header
+﻿#pragma warning disable 8600
+#pragma warning disable 8603
+#pragma warning disable 8604
+#pragma warning disable 8618
+#pragma warning disable 8625
+#pragma warning disable 8769
+#pragma warning disable 8767
+
+#region Header
 /**
  * JsonData.cs
  *   Generic type to hold JSON data (objects, arrays, and so on). This is

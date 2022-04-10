@@ -1,4 +1,7 @@
-﻿#region Header
+﻿#pragma warning disable 8618
+#pragma warning disable 8625
+
+#region Header
 /**
  * JsonReader.cs
  *   Stream-like access to JSON text.

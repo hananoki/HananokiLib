@@ -1,4 +1,8 @@
-﻿using System;
+﻿#pragma warning disable 8601
+#pragma warning disable 8602
+#pragma warning disable 8603
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

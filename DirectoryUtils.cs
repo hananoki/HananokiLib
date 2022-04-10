@@ -5,12 +5,12 @@ using System.Linq;
 namespace HananokiLib {
 	public static class DirectoryUtils {
 		public static string Prettyfy( string dir ) {
-			return dir.separatorToOS().TrimEnd( Path.DirectorySeparatorChar );
+			return dir.SeparatorToOS().TrimEnd( Path.DirectorySeparatorChar );
 		}
 
 
 		public static string[] GetFiles( string path, string searchPattern = "", SearchOption searchOption = SearchOption.TopDirectoryOnly ) {
-			var _path = path.separatorToOS();
+			var _path = path.SeparatorToOS();
 
 			if( !Directory.Exists( _path ) ) return new string[ 0 ];
 
@@ -22,7 +22,7 @@ namespace HananokiLib {
 
 
 		public static string[] GetDirectories( string path, string searchPattern = "", SearchOption searchOption = SearchOption.TopDirectoryOnly ) {
-			var _path = path.separatorToOS();
+			var _path = path.SeparatorToOS();
 
 			if( !Directory.Exists( _path ) ) return new string[ 0 ];
 

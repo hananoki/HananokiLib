@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-
+using System.Text;
 
 public static class Win32 {
 #if false
@@ -203,10 +203,6 @@ public static class Win32 {
 
 	#endregion
 
-#if false
-	
-
-	
 
 	[DllImport( "kernel32.dll" )]
 	public static extern uint FormatMessage(
@@ -215,17 +211,10 @@ public static class Win32 {
 		StringBuilder lpBuffer, int nSize,
 		IntPtr Arguments );
 
-
-
-
-
 	[DllImport( "kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto )]
 	public static extern uint GetShortPathName( [MarshalAs( UnmanagedType.LPTStr )] string lpszLongPath, [MarshalAs( UnmanagedType.LPTStr )] StringBuilder lpszShortPath, uint cchBuffer );
 
 
-
-	
-#endif
 
 	//https://www.pinvoke.net/default.aspx/Enums/VK.html 引用
 	public enum VK : int {

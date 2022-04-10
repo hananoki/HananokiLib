@@ -1,4 +1,10 @@
-﻿#region Header
+﻿#pragma warning disable 8600
+#pragma warning disable 8602
+#pragma warning disable 8603
+#pragma warning disable 8604
+#pragma warning disable 8625
+
+#region Header
 /**
  * JsonMapper.cs
  *   JSON to .Net object and object to JSON conversions.

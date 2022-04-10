@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable 8602
+#pragma warning disable 8618
+
+using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -32,7 +35,7 @@ namespace HananokiLib {
 
 		public static void _init() {
 			var location = Assembly.GetExecutingAssembly().Location;
-			s_appName = location.getBaseName();
+			s_appName = location.GetBaseName();
 
 			var exePath = Directory.GetParent( location );
 			s_appPath = exePath.FullName;

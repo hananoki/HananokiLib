@@ -1,12 +1,21 @@
-﻿using System;
+﻿#pragma warning disable 8602
+#pragma warning disable 8603
+#pragma warning disable 8625
+#pragma warning disable 8767
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 
 
 namespace HananokiLib {
+
 	public static class IntExtensions {
+
 		public static bool Has( this int i, int chk ) {
 			return 0 != ( i & chk ) ? true : false;
 		}
@@ -60,58 +69,62 @@ namespace HananokiLib {
 			return dic.ContainsKey( key ) ? dic[ key ] : "";
 		}
 
-		public static string format( this string fm, params object[] values ) {
+		public static string Format( this string fm, params object[] values ) {
 			return string.Format( fm, values );
 		}
 
-		public static string quote( this string s ) {
+		public static string Quote( this string s ) {
 			return '"' + s + '"';
 		}
 
-		public static string separatorToOS( this string s ) {
-			if( s.isEmpty() ) return string.Empty;
+		public static string SeparatorToOS( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return s.Replace( '/', Path.DirectorySeparatorChar );
 		}
 
-		public static bool isEmpty( this string s ) {
-			return string.IsNullOrEmpty( s );
-		}
+		public static bool IsEmpty( this string s ) => string.IsNullOrEmpty( s );
 
-		public static bool isExistsFile( this string s ) {
-			return File.Exists( s );
-		}
+		public static bool IsExistsFile( this string s ) => File.Exists( s );
 
-		public static bool isExistsDirectory( this string s ) {
-			return Directory.Exists( s );
-		}
+		public static bool IsExistsDirectory( this string s ) => Directory.Exists( s );
 
 
-		public static int toInt32( this string s ) {
+		public static int ToInt32( this string s ) {
 			return Convert.ToInt32( s );
 		}
 
-		public static string getExt( this string s ) {
+		public static string GetExtension( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetExtension( s );
 		}
 
-		public static string getDirectoryName( this string s ) {
-			if( s.isEmpty() ) return "";
+		public static string GetDirectoryName( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetDirectoryName( s );
 		}
 
-		public static string getFileName( this string s ) {
+		public static string GetFileName( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetFileName( s );
 		}
 
-		public static string changeExt( this string s, string ext ) {
+		public static string ChangeExtension( this string s, string ext ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.ChangeExtension( s, ext );
 		}
 
-		public static string getBaseName( this string s ) {
+		public static string GetBaseName( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetFileNameWithoutExtension( s );
 		}
 
-		public static bool isPathRooted( this string s ) {
+		/// <summary>
+		/// ファイル パスにルートが含まれているかどうかを示す値を返します
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
+		public static bool IsPathRooted( this string s ) {
+			if( s.IsEmpty() ) return false;
 			return Path.IsPathRooted( s );
 		}
 
@@ -120,6 +133,8 @@ namespace HananokiLib {
 		}
 
 		public static bool match( this string s1, string s2, Action<GroupCollection> func = null ) {
+			if( s1.IsEmpty() ) return false;
+
 			var mm = Regex.Matches( s1, s2 );
 			if( 0 < mm.Count ) {
 				func?.Invoke( mm[ 0 ].Groups );
@@ -143,17 +158,19 @@ namespace HananokiLib {
 			return func2();
 		}
 
-		private const uint FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;
 
-#if false
-		public static string changeShortPath( this string s ) {
+		const uint FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;
+
+
+		public static string ChangeShortPath( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
+
 			var sb = new StringBuilder( 1024 );
 			uint ret = Win32.GetShortPathName( s, sb, (uint) sb.Capacity );
 			if( ret == 0 ) {
 				int errCode = Marshal.GetLastWin32Error();
 				if( errCode != 0 ) {
-					Console.WriteLine( "Win32エラー・コード：" +
-						String.Format( "{0:X8}", errCode ) );
+					Console.WriteLine( $"Win32エラー・コード：{errCode:X8}" );
 
 					StringBuilder message = new StringBuilder( 255 );
 
@@ -166,14 +183,12 @@ namespace HananokiLib {
 						message.Capacity,
 						IntPtr.Zero );
 
-					Console.WriteLine( "Win32エラー・メッセージ：" +
-						message.ToString() );
+					Console.WriteLine( $"Win32エラー・メッセージ：{message.ToString()}" );
 
 					throw new Exception( "短いファイル名の取得に失敗しました。" );
 				}
 			}
 			return sb.ToString();
 		}
-#endif
 	}
 }

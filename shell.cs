@@ -1,3 +1,5 @@
+#pragma warning disable 8618
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -65,7 +67,7 @@ namespace HananokiLib {
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-			if( !workingDirectory.isEmpty() ) {
+			if( !workingDirectory.IsEmpty() ) {
 				p.StartInfo.WorkingDirectory = workingDirectory;
 			}
 			p.StartInfo.RedirectStandardOutput = true;

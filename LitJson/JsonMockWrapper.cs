@@ -1,4 +1,7 @@
-﻿#region Header
+﻿#pragma warning disable 8603
+#pragma warning disable 8769
+
+#region Header
 /**
  * JsonMockWrapper.cs
  *   Mock object implementing IJsonWrapper, to facilitate actions like

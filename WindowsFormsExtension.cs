@@ -1,3 +1,11 @@
+#pragma warning disable 8600
+#pragma warning disable 8602
+#pragma warning disable 8603
+#pragma warning disable 8604
+#pragma warning disable 8618
+#pragma warning disable 8619
+#pragma warning disable 8622
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +21,7 @@ namespace HananokiLib {
 	public class StatusBarMessage {
 		ToolStripStatusLabel m_label;
 		Form m_form;
-		public Timer m_timer;
+		public System.Windows.Forms.Timer m_timer;
 
 		public enum NotifyType {
 			None,
@@ -29,7 +37,7 @@ namespace HananokiLib {
 
 			m_label.Text = "";
 
-			m_timer = new Timer();
+			m_timer = new System.Windows.Forms.Timer();
 			m_timer.Tick += new EventHandler( ( s, ee ) => {
 				m_label.Text = "";
 				m_label.Image = null;
@@ -74,83 +82,13 @@ namespace HananokiLib {
 
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////
-	public class TListView<TItem> : ListView where TItem : ListViewItem {
-		public List<TItem> m_items = new List<TItem>();
-		public int doubleClickIndex;
-		public TListView() {
-			this.VirtualMode = true;
-			this.SetDoubleBuffered( true );
-			this.RetrieveVirtualItem += OnRetrieveVirtualItem;
-			this.MouseClick += OnMouseClick;
-			this.DoubleClick += OnDoubleClick;
-		}
-
-		public void AddItem( TItem item ) {
-			m_items.Add( item );
-		}
-		public void ClearItems() {
-			//Items.Clear();
-			m_items.Clear();
-		}
-
-		public TItem GetSelectItem() {
-			return m_items[ SelectedIndices[ 0 ] ];
-		}
-
-		public TItem GetDoubleClickItem() {
-			return m_items[ doubleClickIndex ];
-		}
-
-		public TItem[] GetSelectItems() {
-			var lst = new List<TItem>();
-			foreach( var i in SelectedIndices ) lst.Add( m_items[ (int) i ] );
-			return lst.ToArray();
-		}
-
-		public void ApplyVirtualListSize() {
-			VirtualListSize = 0;
-			VirtualListSize = m_items.Count;
-		}
-
-		void OnRetrieveVirtualItem( object sender, RetrieveVirtualItemEventArgs e ) {
-			var lstView = (ListView) sender;
-			//var items = (List<TItem>) lstView.Tag;
-
-			if( m_items.Count <= e.ItemIndex ) return;
-			//if( items == null ) return;
-
-			e.Item = m_items[ e.ItemIndex ];
-		}
-
-		public virtual void OnDoubleClick( object sender, EventArgs e ) {
-			doubleClickIndex = SelectedIndices[ 0 ];
-			OnDoubleClicked( m_items[ doubleClickIndex ] as TItem );
-		}
-
-		public virtual void OnDoubleClicked( TItem item ) { }
-
-		void OnMouseClick( object sender, MouseEventArgs e ) {
-			var listview = (ListView) sender;
-			var item = listview.GetItemAt( e.X, e.Y ) as TItem;
-
-			if( item != null ) {
-				if( e.X < ( item.Bounds.Left + 16 ) ) {
-					item.invertChecked();
-					OnMouseClicked( item );
-				}
-			}
-		}
-		public virtual void OnMouseClicked( TItem item ) {
-		}
-	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////
 	public class TextBoxGuide : TextBox {
 		//TextBox m_txtbox;
 		public string def = "def";
-		Func<string, string> m_setAction;
+		Func<TextBoxGuide, string, string> m_setAction;
 		public bool checkMode;
 
 		public Func<TextBoxGuide, bool> onValidate;
@@ -158,16 +96,16 @@ namespace HananokiLib {
 		/////////////////////////////////////////
 		public TextBoxGuide() {
 			onValidate = ( self ) => {
-				return Text.isExistsFile() || Text.isExistsDirectory();
+				return Text.IsExistsFile() || Text.IsExistsDirectory();
 			};
 		}
 
 		/////////////////////////////////////////
-		public void Init( string msg, Func<string, string> setText = null ) {
+		public void Init( string msg, Func<TextBoxGuide,string, string>? setText = null ) {
 			//m_txtbox = t;
 			AllowDrop = true;
 			if( setText == null ) {
-				m_setAction = InText => InText;
+				m_setAction = (self, InText) => InText;
 			}
 			else {
 				m_setAction = setText;
@@ -190,7 +128,7 @@ namespace HananokiLib {
 		/////////////////////////////////////////
 		public bool IsValidText() {
 			if( Text == def ) return false;
-			if( Text.isEmpty() ) return false;
+			if( Text.IsEmpty() ) return false;
 			return true;
 		}
 
@@ -199,7 +137,7 @@ namespace HananokiLib {
 		public void SetText( string path ) {
 			WindowsFormExtended.DoSomethingWithoutEvents(
 					this,
-					() => Text = path.isEmpty() ? def : path
+					() => Text = path.IsEmpty() ? def : path
 					);
 
 			UpdateTextStatus();
@@ -208,7 +146,7 @@ namespace HananokiLib {
 
 		/////////////////////////////////////////
 		public void UpdateTextStatus() {
-			if( Text.isEmpty() || Text == def ) {
+			if( Text.IsEmpty() || Text == def ) {
 				ForeColor = Color.Silver;
 				BackColor = SystemColors.Window;
 			}
@@ -280,7 +218,7 @@ namespace HananokiLib {
 
 			//listBox1.Items.AddRange( files ); // リストボックスに表示
 			if( txtbox.m_setAction != null ) {
-				txtbox.Text = txtbox.m_setAction?.Invoke( files[ 0 ] );
+				txtbox.Text = txtbox.m_setAction?.Invoke( this, files[ 0 ] );
 			}
 			else {
 				txtbox.Text = files[ 0 ];
@@ -295,7 +233,7 @@ namespace HananokiLib {
 
 			if( txtbox.Text != txtbox.def ) {
 				//MainForm.config.sevenZipPath = txtbox.Text;
-				var ss = m_setAction?.Invoke( txtbox.Text );
+				var ss = m_setAction?.Invoke( this, txtbox.Text );
 				WindowsFormExtended.DoSomethingWithoutEvents(
 					txtbox,
 					() => txtbox.Text = ss
@@ -314,20 +252,20 @@ namespace HananokiLib {
 		public static void setText( this TextBox textBox, string path ) {
 			WindowsFormExtended.DoSomethingWithoutEvents(
 					textBox,
-					() => textBox.Text = path.isEmpty() ? def : path
+					() => textBox.Text = path.IsEmpty() ? def : path
 					);
 
 			updateTextStatus( textBox );
 		}
 
 		public static void updateTextStatus( this TextBox textBox ) {
-			if( textBox.Text.isEmpty() ) {
+			if( textBox.Text.IsEmpty() ) {
 				textBox.ForeColor = Color.Silver;
 				textBox.BackColor = SystemColors.Window;
 			}
 			else {
 				textBox.ForeColor = SystemColors.WindowText;
-				if( textBox.Text.isExistsFile() ) {
+				if( textBox.Text.IsExistsFile() ) {
 					textBox.BackColor = SystemColors.Window;
 				}
 				else if( def != textBox.Text ) {
@@ -493,3 +431,51 @@ namespace HananokiLib {
 		}
 	}
 }
+
+
+namespace PropertyGridExtensionHacks {
+	public static class PropertyGridExtensions {
+		/// <summary>
+		/// Gets the (private) PropertyGridView instance.
+		/// </summary>
+		/// <param name="propertyGrid">The property grid.</param>
+		/// <returns>The PropertyGridView instance.</returns>
+		private static object GetPropertyGridView( PropertyGrid propertyGrid ) {
+			//private PropertyGridView GetPropertyGridView();
+			//PropertyGridView is an internal class...
+			MethodInfo methodInfo = typeof( PropertyGrid ).GetMethod( "GetPropertyGridView", BindingFlags.NonPublic | BindingFlags.Instance );
+			return methodInfo.Invoke( propertyGrid, new object[] { } );
+		}
+
+		/// <summary>
+		/// Gets the width of the left column.
+		/// </summary>
+		/// <param name="propertyGrid">The property grid.</param>
+		/// <returns>
+		/// The width of the left column.
+		/// </returns>
+		public static int GetInternalLabelWidth( this PropertyGrid propertyGrid ) {
+			//System.Windows.Forms.PropertyGridInternal.PropertyGridView
+			object gridView = GetPropertyGridView( propertyGrid );
+
+			//protected int InternalLabelWidth
+			PropertyInfo propInfo = gridView.GetType().GetProperty( "InternalLabelWidth", BindingFlags.NonPublic | BindingFlags.Instance );
+			return (int) propInfo.GetValue( gridView );
+		}
+
+		/// <summary>
+		/// Moves the splitter to the supplied horizontal position.
+		/// </summary>
+		/// <param name="propertyGrid">The property grid.</param>
+		/// <param name="xpos">The horizontal position.</param>
+		public static void MoveSplitterTo( this PropertyGrid propertyGrid, int xpos ) {
+			//System.Windows.Forms.PropertyGridInternal.PropertyGridView
+			object gridView = GetPropertyGridView( propertyGrid );
+
+			//private void MoveSplitterTo(int xpos);
+			MethodInfo methodInfo = gridView.GetType().GetMethod( "MoveSplitterTo", BindingFlags.NonPublic | BindingFlags.Instance );
+			methodInfo.Invoke( gridView, new object[] { xpos } );
+		}
+	}
+}
+

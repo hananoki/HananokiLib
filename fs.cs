@@ -1,3 +1,4 @@
+#pragma warning disable 8604
 
 using System.IO;
 
@@ -36,7 +37,7 @@ namespace HananokiLib {
 			}
 
 			var dname = Path.GetDirectoryName( dst );
-			if( !dname.isEmpty() ) {
+			if( !dname.IsEmpty() ) {
 				if( !Directory.Exists( dname ) ) {
 					Directory.CreateDirectory( dname );
 				}
