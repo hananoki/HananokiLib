@@ -57,14 +57,20 @@ namespace HananokiLib {
 
 			if( File.Exists( src ) ) {
 				if( File.Exists( dst ) ) {
-					File.Delete( dst );
+					if( src.ToLower() != dst.ToLower() ) {
+						//“¯–¼
+						//return;
+						File.Delete( dst );
+					}
 				}
 				File.Move( src, dst );
 			}
 
 			if( Directory.Exists( src ) ) {
 				if( Directory.Exists( dst ) ) {
-					Directory.Delete( dst );
+					if( src.ToLower() != dst.ToLower() ) {
+						Directory.Delete( dst );
+					}
 				}
 				Directory.Move( src, dst );
 			}

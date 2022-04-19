@@ -20,7 +20,7 @@ namespace HananokiLib {
 
 
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
+		//[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Log<T>( T m ) where T : IConvertible {
 #if TRACE
 			//if( string.IsNullOrEmpty( m ) ) return;
@@ -29,7 +29,7 @@ namespace HananokiLib {
 #endif
 		}
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
+		//[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Log( string m, params object[] args ) {
 #if TRACE
 			if( string.IsNullOrEmpty( m ) ) return;
@@ -38,7 +38,7 @@ namespace HananokiLib {
 #endif
 		}
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
+		//[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Warning( string m, params object[] args ) {
 #if TRACE
 			if( string.IsNullOrEmpty( m ) ) return;
@@ -47,7 +47,15 @@ namespace HananokiLib {
 #endif
 		}
 
-		[System.Diagnostics.Conditional( "DEBUG" )]
+		public static void Error<T>( T m ) where T : IConvertible {
+#if TRACE
+			//if( string.IsNullOrEmpty( m ) ) return;
+			Console.WriteLine( m.ToString() );
+			HananokiLib.Log.Error( m.ToString() );
+#endif
+		}
+
+		//[System.Diagnostics.Conditional( "DEBUG" )]
 		public static void Exception( Exception args ) {
 #if TRACE
 			//if( string.IsNullOrEmpty( m ) ) return;

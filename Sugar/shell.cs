@@ -56,8 +56,8 @@ namespace HananokiLib {
 
 
 		public static CommandOutput startProcess( string filename, string arguments, string workingDirectory = "" ) {
-			Log.Info( $"{filename} {arguments}" );
 
+			Log.Info( $"{filename} {arguments}" );
 
 			//*
 			//using(  ) {

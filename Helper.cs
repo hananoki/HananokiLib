@@ -46,6 +46,8 @@ namespace HananokiLib {
 			if( 1 < info.dwNumberOfProcessors ) {
 				s_parallelOptions.MaxDegreeOfParallelism = (int) info.dwNumberOfProcessors - 1;
 			}
+
+			var dummy = LogWindow.instance; // 初回アクセスによる生成が別スレッドで行われるのを防ぐ
 		}
 
 
