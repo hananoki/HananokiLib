@@ -1,5 +1,6 @@
 #pragma warning disable 8604
 
+using System;
 using System.IO;
 
 
@@ -43,12 +44,17 @@ namespace HananokiLib {
 				}
 			}
 
-			if( File.Exists( src ) ) {
-				File.Copy( src, dst, overwrite );
+			try {
+				if( File.Exists( src ) ) {
+					File.Copy( src, dst, overwrite );
+				}
+				if( Directory.Exists( src ) ) {
+					//DirectoryUtils.DirectoryCopy( src, dst );
+					Debug.Warning( "DirectoryUtils.DirectoryCopy" );
+				}
 			}
-			if( Directory.Exists( src ) ) {
-				//DirectoryUtils.DirectoryCopy( src, dst );
-				Debug.Warning( "DirectoryUtils.DirectoryCopy" );
+			catch(Exception e) {
+				Debug.Exception(e);
 			}
 		}
 

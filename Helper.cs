@@ -97,6 +97,7 @@ namespace HananokiLib {
 			}
 			catch( Exception e ) {
 				Debug.Exception(e);
+				return false;
 			}
 			return true;
 		}

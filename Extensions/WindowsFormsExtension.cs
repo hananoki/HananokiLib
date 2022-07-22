@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 
 namespace HananokiLib {
-	
+
 	/////////////////////////////////////////
 	public static class TextBoxHelper {
 		public static string def = "def";
@@ -56,11 +56,17 @@ namespace HananokiLib {
 			form.Left = parent.Left + ( parent.Width - form.Width ) / 2;
 			form.Top = parent.Top + ( parent.Height - form.Height ) / 2;
 			form.Owner = parent;
-}
-}
+		}
+
+		public static void SetVisible<T>( this List<T> lst, bool visible ) where T : ToolStripItem {
+			foreach(var p in lst ) {
+				p.Visible = visible; 
+			}
+		}
+	}
 
 
-/// 引用 https://tercel-tech.hatenablog.com/entry/2015/07/11/135658
+	/// 引用 https://tercel-tech.hatenablog.com/entry/2015/07/11/135658
 	public static class WindowsFormExtended {
 		/// <summary>
 		/// 指定したコントロールのイベントを一時的に無効化した状態で、

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -19,16 +20,45 @@ namespace HananokiLib {
 		public static bool Has( this int i, int chk ) {
 			return 0 != ( i & chk ) ? true : false;
 		}
+		public static bool Has( this uint i, int chk ) {
+			return 0 != ( i & chk ) ? true : false;
+		}
+		public static bool Has( this uint i, uint chk ) {
+			return 0 != ( i & chk ) ? true : false;
+		}
+
 		public static void Enable( ref this int i, int chk ) {
 			i |= chk;
 		}
-
+		public static void Enable( ref this uint i, uint chk ) {
+			i |= chk;
+		}
 		public static void Disable( ref this int i, int chk ) {
+			i &= ~chk;
+		}
+		public static void Disable( ref this uint i, uint chk ) {
 			i &= ~chk;
 		}
 		public static void Toggle( ref this int i, int flag, bool b ) {
 			if( b ) i |= flag;
 			else i &= ~flag;
+		}
+		public static void Toggle( ref this uint i, uint flag, bool b ) {
+			if( b ) i |= flag;
+			else i &= ~flag;
+		}
+
+		public static void Fill( this sbyte[] self, sbyte value ) {
+			for( int i = 0; i < self.Length; i++ ) self[ i ] = value;
+		}
+		public static void Fill( this short[] self, short value ) {
+			for( int i = 0; i < self.Length; i++ ) self[ i ] = value;
+		}
+		public static void Fill( this int[] self, int value ) {
+			for( int i = 0; i < self.Length; i++ ) self[ i ] = value;
+		}
+		public static void Fill( this uint[] self, uint value ) {
+			for( int i = 0; i < self.Length; i++ ) self[ i ] = value;
 		}
 
 		sealed class CommonSelector<T, TKey> : IEqualityComparer<T> {
@@ -60,6 +90,16 @@ namespace HananokiLib {
 			if( s == null ) return true;
 			if( s.Count == 0 ) return true;
 			return false;
+		}
+
+		public static void SetValueInt( this FieldInfo filedInfo, object obj, int value ) {
+			var t = filedInfo.FieldType;
+			if( t == typeof( byte ) ) {
+				filedInfo.SetValue( obj, (byte)(int)value );
+			}
+			else if( t == typeof( uint ) ) {
+				filedInfo.SetValue( obj, (uint) (int) value );
+			}
 		}
 	}
 

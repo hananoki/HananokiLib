@@ -27,10 +27,15 @@ namespace HananokiLib {
 		/// このプロセスのみ有効な環境変数を設定します
 		/// </summary>
 		/// <param name="path"></param>
-		public static void SetProcessEnvironmentPath( string path ) {
+		public static void SetProcessEnvironmentPath( params string[] paths ) {
+			var path = string.Join( ";", paths );
 			Environment.SetEnvironmentVariable( "PATH", path, EnvironmentVariableTarget.Process );
 
 			Debug.Log( $"SetEnvironmentVariable > {path}" );
+		}
+
+		public static void openFolder( string folderPath ) {
+			start( "explorer", folderPath.SeparatorToOS() );
 		}
 
 		public static void start( string fileName ) {

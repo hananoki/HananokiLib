@@ -36,28 +36,33 @@ namespace HananokiLib {
 
 		/////////////////////////////////////////
 		public void SetNotifyText( string text = "", NotifyType type = NotifyType.Info, int interval = 10000 ) {
-			m_form.Invoke( new Action( () => {
-				m_label.Text = text;
-				switch( type ) {
-					case NotifyType.None:
-						m_label.Image = null;
-						break;
-					case NotifyType.Info:
-						m_label.Image = icon.info;
-						break;
-					case NotifyType.Warning:
-						m_label.Image = icon.warning;
-						break;
-					case NotifyType.Error:
-						m_label.Image = icon.error;
-						break;
-				}
-				m_timer.Stop();
-				if( 1 <= interval ) {
-					m_timer.Interval = interval;
-					m_timer.Start();
-				}
-			} ) );
+			try {
+				m_form.Invoke( new Action( () => {
+					m_label.Text = text;
+					switch( type ) {
+						case NotifyType.None:
+							m_label.Image = null;
+							break;
+						case NotifyType.Info:
+							m_label.Image = icon.info;
+							break;
+						case NotifyType.Warning:
+							m_label.Image = icon.warning;
+							break;
+						case NotifyType.Error:
+							m_label.Image = icon.error;
+							break;
+					}
+					m_timer.Stop();
+					if( 1 <= interval ) {
+						m_timer.Interval = interval;
+						m_timer.Start();
+					}
+				} ) );
+			}
+			catch( Exception e ) {
+				Debug.Exception( e );
+			}
 		}
 
 
