@@ -83,11 +83,20 @@ public static class Win32 {
 	// SHGetFileInfo関数
 	[DllImport( "shell32.dll" )]
 	public static extern IntPtr SHGetFileInfo( string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags );
+
+	[DllImport( "shell32.dll", CharSet = CharSet.Unicode )]
+	public static extern void SHGetStockIconInfo( UInt32 siid, UInt32 uFlags, ref SHSTOCKICONINFO sii );
+
 	// SHGetFileInfo関数で使用するフラグ
 	public const uint SHGFI_ICON = 0x100; // アイコン・リソースの取得
 	public const uint SHGFI_LARGEICON = 0x0; // 大きいアイコン
 	public const uint SHGFI_SMALLICON = 0x1; // 小さいアイコン
 																					 // SHGetFileInfo関数で使用する構造体
+
+	public const UInt32 SHGSI_ICON = 0x000000100;
+	public const UInt32 SHGSI_SMALLICON = 0x000000001;
+	public const UInt32 SIID_SHIELD = 0x00000004D;
+
 	public struct SHFILEINFO {
 		public IntPtr hIcon;
 		public IntPtr iIcon;
@@ -96,7 +105,16 @@ public static class Win32 {
 		public string szDisplayName;
 		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 80 )]
 		public string szTypeName;
-	};
+	}
+	[StructLayoutAttribute( LayoutKind.Sequential, CharSet = CharSet.Unicode )]
+	public struct SHSTOCKICONINFO {
+		public Int32 cbSize;
+		public IntPtr hIcon;
+		public Int32 iSysImageIndex;
+		public Int32 iIcon;
+		[MarshalAs( UnmanagedType.ByValTStr, SizeConst = 260 )]
+		public string szPath;
+	}
 #endif
 
 

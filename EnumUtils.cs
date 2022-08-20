@@ -21,6 +21,9 @@ namespace HananokiLib {
 			return new List<int>( GetValuesArray( t ) );
 		}
 
+		public static string[] GetNamesArray<T>(  ) {
+			return GetNamesArray( typeof( T ) );
+		}
 		public static string[] GetNamesArray( Type t ) {
 			return Enum.GetNames( t );
 		}
